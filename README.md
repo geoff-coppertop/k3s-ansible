@@ -21,7 +21,7 @@ on processor architecture:
 Deployment environment must have Ansible 2.4.0+
 Master and nodes must have passwordless SSH access
 
-## Usage
+## Playbook Usage
 
 First create a new directory based on the `sample` directory within the `inventory` directory:
 
@@ -31,7 +31,7 @@ cp -R inventory/sample inventory/my-cluster
 
 Second, edit `inventory/my-cluster/hosts.ini` to match the system information gathered above. For example:
 
-```bash
+```ini
 [master]
 192.16.35.12
 
@@ -48,8 +48,94 @@ If needed, you can also edit `inventory/my-cluster/group_vars/all.yml` to match 
 Start provisioning of the cluster using the following command:
 
 ```bash
-ansible-playbook site.yml -i inventory/my-cluster/hosts.ini
+ansible-playbook playbooks/site.yml -i inventory/my-cluster/hosts.ini
 ```
+
+The cluster can be reset to its previous un-provisioned state using the following command:
+
+```bash
+ansible-playbook playbooks/reset.yml -i inventory/my-cluster/hosts.ini
+```
+
+## Ansible-Galaxy
+
+### Publishing k3s roles collection
+
+The playbook to publish the k3s roles collection to ansible galaxy requires an environment variable `ANSIBLE_GALAXY_TOKEN` to be set with API key for the account/namespace in question at [Ansible Galaxy](https://galaxy.ansible.com).
+
+The playbook takes the following 5 arguments,
+
+| Name | Optional | Description |
+| --- | --- | --- |
+| dry_run | yes | Perform collection build without publishing, defaults to false. |
+| namespace | no | Ansible Galaxy namespace matching the API key provided by `ANSIBLE_GALAXY_TOKEN` |
+| remove_artifacts | yes | Remove artifacts produced by the collection build, defaults to true |
+| repo | no | Github repo path |
+| tag | no | Semantic version tag in the form 0.0.1 |
+
+The k3s roles collection can be published to ansible galaxy using the following command:
+
+```bash
+ansible-playbook scripts/publish.yml -e '{"repo":"geoff-coppertop/k3s-ansible","namespace":"geoff_coppertop","tag":"0.0.3"}'
+```
+
+### Using k3s roles collection
+
+The published collection can be used by first installing it using either,
+
+```bash
+ansible-galaxy collection install <namespace>.k3s_roles
+```
+
+Where `<namespace>` is replaced with the one used in the publishing step (e.g. geoff_coppertop). Note, this can also be accomplished with a requirements.yml file.
+
+The collection can then be used in a playbook as follows,
+
+```yml
+- hosts: cluster
+  become: yes
+  gather_facts: yes
+  roles:
+  - geoff_coppertop.k3s_roles.prereq
+  - geoff_coppertop.k3s_roles.download
+  - geoff_coppertop.k3s_roles.raspberrypi
+
+- hosts: master
+  become: yes
+  roles:
+    - geoff_coppertop.k3s_roles.k3s.master
+
+- hosts: node
+  become: yes
+  roles:
+    - geoff_coppertop.k3s_roles.k3s.node
+
+```
+
+Note that instead of using the fully qualified collection name (FQCN) the following could be used instead,
+
+```yml
+- hosts: cluster
+  collections:
+  - geoff_coppertop.k3s_roles
+  become: yes
+  gather_facts: yes
+  roles:
+  - prereq
+  - download
+  - raspberrypi
+  ```
+
+Now that the roles are in an easily consummable format they can be easily integrated into other playbooks.
+
+For the roles to function an inventory file with group(s) named as follows is necessary,
+
+```ini
+[master]
+192.168.1.26
+```
+
+Other groups can be named as needed.
 
 ## Kubeconfig
 

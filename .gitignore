@@ -1,0 +1,4 @@
+galaxy.yml
+*.tar.gz
+*k3s_roles*
+.DS_Store
