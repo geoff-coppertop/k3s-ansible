@@ -1,10 +1,11 @@
 ---
 name: Lint
-"on":
+on:
   pull_request:
   push:
     branches:
       - master
+      - ansible-galaxy
 
 jobs:
   lint:
