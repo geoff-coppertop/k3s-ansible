@@ -1,3 +1,4 @@
+---
 name: Publish
 on:
   push:
@@ -32,15 +33,14 @@ jobs:
         with:
           name: "args.json"
           json: '{"namespace":"geoff_coppertop","tag":"${{ steps.version.outputs.version }}","repo":"${GITHUB_REPOSITORY}"}'
-          dir: '${HOME}/.ansible/'
 
       - name: Publish to ansible-galaxy
         if: success()
         env:
           ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
-        run: ansible-playbook ./scripts/publish.yaml -e "@${HOME}/.ansible/args.json"
+        run: ansible-playbook ./scripts/publish.yaml -e "@$args.json"
 
       - name: Clear
         if: always()
         run: |
-          rm -f ${HOME}/.ansible/args.json
+          rm -f ./args.json
