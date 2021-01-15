@@ -1,0 +1,48 @@
+name: Base Service Build/Publish
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=latest
+
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+              VERSION=${GITHUB_REF#refs/tags/v}
+          fi
+
+          if [[ $VERSION =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+              exit -1
+          fi
+
+          echo ::set-output name=version::${VERSION}
+
+      - name: Create playbook arguments file
+        if: success()
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "args.json"
+          json: '{"namespace":"geoff_coppertop","tag":"${{ steps.version.outputs.version }}","repo":"${GITHUB_REPOSITORY}"}'
+          dir: '${HOME}/.ansible/'
+
+      - name: Publish to ansible-galaxy
+        if: success()
+        env:
+          ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
+        run: ansible-playbook ./scripts/publish.yaml -e "@${HOME}/.ansible/args.json"
+
+      - name: Clear
+        if: always()
+        run: |
+          rm -f ${HOME}/.ansible/args.json

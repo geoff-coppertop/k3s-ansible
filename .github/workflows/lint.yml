@@ -1,14 +1,13 @@
 ---
 name: Lint
-'on':
+"on":
   pull_request:
   push:
     branches:
       - master
 
 jobs:
-
-  test:
+  lint:
     name: Lint
     runs-on: ubuntu-latest
 
@@ -19,7 +18,7 @@ jobs:
       - name: Set up Python 3.7.
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Install test dependencies.
         run: pip3 install yamllint ansible-lint
