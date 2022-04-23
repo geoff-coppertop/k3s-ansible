@@ -61,7 +61,7 @@ ansible-playbook playbooks/reset.yml -i inventory/my-cluster/hosts.ini
 
 ### Publishing k3s roles collection
 
-The roles are automatically pushed to [Ansible Galaxy](https://galaxy.ansible.com) via the [artis3n/ansible_galaxy_collection]() github action when the project is tagged v#.#.#. The publish action requires that an environment variable `ANSIBLE_GALAXY_TOKEN` to be set with API key for the account/namespace in question at [Ansible Galaxy](https://galaxy.ansible.com).
+The roles are automatically pushed to [Ansible Galaxy](https://galaxy.ansible.com) via the [artis3n/ansible_galaxy_collection](https://github.com/artis3n/ansible_galaxy_collection) github action when the project is tagged v#.#.#. The publish action requires that an environment variable `ANSIBLE_GALAXY_TOKEN` to be set with API key for the account/namespace in question at [Ansible Galaxy](https://galaxy.ansible.com).
 
 ### Using k3s roles collection
 
