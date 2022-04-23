@@ -1,0 +1,30 @@
+---
+namespace: "geoff_coppertop"
+name: "k3s_roles"
+description: A simple collection of roles for setting up and tearing down a k3s cluster.
+readme: README.md
+authors:
+  - geoff-coppertop (https://github.com/geoff-coppertop/)
+dependencies: { }
+license: Apache-2.0
+tags:
+    - k3s
+    - k8s
+    - kubernetes
+    - docker
+    - containerd
+    - cluster
+    - rancher
+    - lightweight
+repository: https://github.com/k3s-ansible
+issues: https://github.com/k3s-ansible/issues
+build_ignore:
+  - .github
+  - inventory
+  - playbooks
+  - scripts
+  - .gitignore
+  - .yamllint
+  - ansible.cfg
+  - '*.tar.gz'
+  - '*k3s_roles*'
