@@ -3,9 +3,6 @@ name: Lint
 on:
   pull_request:
   push:
-    branches:
-      - master
-      - ansible-galaxy
 
 jobs:
   lint:
@@ -21,11 +18,5 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install test dependencies.
-        run: pip3 install yamllint ansible-lint
-
-      - name: Run yamllint.
-        run: yamllint .
-
-      - name: Run ansible-lint.
-        run: ansible-lint
+      - name: Run pre-commit to lint
+        uses: pre-commit/action@v2.0.3

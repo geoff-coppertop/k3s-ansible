@@ -1,6 +1,6 @@
 # Build a Kubernetes cluster using k3s via Ansible
 
-Author: <https://github.com/itwars>
+Author: <https://github.com/geoff-coppertop>
 
 ## K3s Ansible Playbook
 
@@ -61,23 +61,7 @@ ansible-playbook playbooks/reset.yml -i inventory/my-cluster/hosts.ini
 
 ### Publishing k3s roles collection
 
-The playbook to publish the k3s roles collection to ansible galaxy requires an environment variable `ANSIBLE_GALAXY_TOKEN` to be set with API key for the account/namespace in question at [Ansible Galaxy](https://galaxy.ansible.com).
-
-The playbook takes the following 5 arguments,
-
-| Name | Optional | Description |
-| --- | --- | --- |
-| dry_run | yes | Perform collection build without publishing, defaults to false. |
-| namespace | no | Ansible Galaxy namespace matching the API key provided by `ANSIBLE_GALAXY_TOKEN` |
-| remove_artifacts | yes | Remove artifacts produced by the collection build, defaults to true |
-| repo | no | Github repo path |
-| tag | no | Semantic version tag in the form 0.0.1 |
-
-The k3s roles collection can be published to ansible galaxy using the following command:
-
-```bash
-ansible-playbook scripts/publish.yml -e '{"repo":"geoff-coppertop/k3s-ansible","namespace":"geoff_coppertop","tag":"0.0.3"}'
-```
+The roles are automatically pushed to [Ansible Galaxy](https://galaxy.ansible.com) via the [artis3n/ansible_galaxy_collection]() github action when the project is tagged v#.#.#. The publish action requires that an environment variable `ANSIBLE_GALAXY_TOKEN` to be set with API key for the account/namespace in question at [Ansible Galaxy](https://galaxy.ansible.com).
 
 ### Using k3s roles collection
 
