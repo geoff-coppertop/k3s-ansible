@@ -3,8 +3,8 @@
 - name: Copy K3s service file
   register: k3s_service
   template:
-    src: "k3s.service.j2"
-    dest: "{{ systemd_dir }}/k3s.service"
+    src: k3s.service.j2
+    dest: '{{ systemd_dir }}/k3s.service'
     owner: root
     group: root
     mode: 0644
@@ -48,16 +48,16 @@
   file:
     path: ~{{ ansible_user }}/.kube
     state: directory
-    owner: "{{ ansible_user }}"
-    mode: "u=rwx,g=rx,o="
+    owner: '{{ ansible_user }}'
+    mode: u=rwx,g=rx,o=
 
 - name: Copy config file to user home directory
   copy:
     src: /etc/rancher/k3s/k3s.yaml
     dest: ~{{ ansible_user }}/.kube/config
     remote_src: yes
-    owner: "{{ ansible_user }}"
-    mode: "u=rw,g=,o="
+    owner: '{{ ansible_user }}'
+    mode: u=rw,g=,o=
 
 - name: Replace https://localhost:6443 by https://master-ip:6443
   command: >-
